@@ -1,0 +1,12 @@
+plugin: amazon.aws.aws_ec2
+regions:
+  - "us-east-1"
+filters:
+  tag:Environment: ["dev"]
+compose:
+  ansible_host: public_ip_address
+keyed_groups:
+  - key: tag:Environment  # group to call all ec2's by environment tag
+    prefix: env
+  - key: tag:Name         # group to call each individual ec2 by name tag
+    prefix: name

@@ -1,0 +1,77 @@
+- name: create prometheus user group
+  group: name="{{groupId}}"
+  become: true
+
+- name: create prometheus user
+  user:
+    name: "{{userId}}"
+    group: "{{groupId}}"
+    system: yes # makes it a system account rather than a human user
+    shell: "/sbin/nologin" # makes a user not able to login
+    createhome: "no" # do not create a home directory
+    state: present
+
+- name: Download prometheus
+  unarchive:
+    src: "https://github.com/prometheus/prometheus/releases/download/v{{ version }}/prometheus-{{ version }}.linux-amd64.tar.gz"
+    dest: /tmp/
+    remote_src: true # download on the target nodes and not the ansible hub
+
+- name: Copying the binaries from tmp to bin
+  copy:
+    src: "/tmp/prometheus-{{version}}-linux-amd64/prometheus"
+    dest: "/usr/local/bin/prometheus"
+    owner: "{{userId}}"
+    group: "{{groupId}}"
+    mode: 0755
+    remote_src: yes
+
+- name: Deleting the tmp folder
+  file:
+    path: "/tmp/prometheus-{{version}}-linux-amd64"
+    state: absent
+
+- name: Creating the data directory to store prometheus data
+  file:
+    path: "/data/prometheus"
+    state: directory
+    owner: "{{userId}}"
+    group: "{{groupId}}"
+    mode: 0755
+
+- name: Creating the config directory to store prometheus config
+  file:
+    path: "/etc/prometheus"
+    state: directory
+    owner: "{{userId}}"
+    group: "{{groupId}}"
+    mode: 0755
+
+- name: Copying the config file to /etc folder
+  copy:
+    src: "alert.rules.yaml"
+    dest: "/etc/prometheus/alert.rules.yaml"
+
+- name: Copying the prometheus config file
+  template:
+    src: "prometheus.conf.j2"
+    dest: "/etc/prometheus/prometheus.conf"
+  notify: systemd_reload
+
+- name: Copying systemd init file
+  template: # copy module can't handle the variables in the .j2 file so we use template module
+    src: "prometheus.service.j2"
+    dest: "/etc/systemd/system/{{serviceName}}.service"
+  notify: systemd_reload # calls the handler
+
+- name: Start prometheus service
+  service:
+    name: "{{serviceName}}"
+    state: started
+    enabled: yes
+
+- name: Check if prometheus is working
+  uri:
+    url: http://localhost:9090
+    method: GET
+    status_code: 200

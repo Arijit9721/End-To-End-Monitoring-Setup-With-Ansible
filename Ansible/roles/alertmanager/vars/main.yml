@@ -1,0 +1,6 @@
+---
+groupId: "alertmanager"
+userId: "alertmanager"
+serviceName: "alertmanager"
+version: "0.30.0"
+exec_command: "/usr/local/bin/alertmanager --config.file=/etc/alertmanager/alertmanager.yaml  --storage.path=/data/alertmanager"

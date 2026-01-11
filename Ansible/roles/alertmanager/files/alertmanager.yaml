@@ -1,0 +1,18 @@
+global:
+  slack_api_url: "https://hooks.slack.com/services/T056JLJGJ0U/B056JLJGJ0U/SlackWebhookAPI"
+
+route:
+  group_by: ["alertname", "instance"]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  routes:
+  - match: 
+      alertname: InstanceDown
+  receiver: "alert-team"
+
+receivers:
+  - name: "alert-team"
+    slack_configs:
+    - channel: "#webhook-test"
+      text: "Summary: {{ .CommonAnnotations.summary }} \nDescription: {{ .CommonAnnotations.description }}"

@@ -1,0 +1,46 @@
+- name: Installing the pre-requisite packages
+  apt:
+    name:
+      - wget
+      - apt-transport-https
+      - software-properties-common
+      - gnupg2
+    state: present
+    update_cache: yes
+
+- name: Creating directory for apt keyrings
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+- name: Download and add the grafana keyrings
+  shell: |
+    wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | tee /etc/apt/keyrings/grafana.gpg > /dev/null
+  args:
+    creates: /etc/apt/keyrings/grafana.gpg
+
+- name: Adding the grafana repository
+  apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main"
+    state: present
+    filename: grafana
+
+- name: Installing grafana
+  apt:
+    name: grafana
+    state: present
+    update_cache: yes
+
+- name: Starting and enabling grafana service
+  service:
+    name: grafana
+    state: started
+    enabled: yes
+  notify: restart_grafana # call the handler
+
+- name: Grafana Check
+  uri:
+    url: http://localhost:3000
+    method: GET
+    status_code: 200
