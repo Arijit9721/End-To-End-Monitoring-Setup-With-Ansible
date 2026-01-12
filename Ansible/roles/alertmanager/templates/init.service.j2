@@ -1,16 +1,16 @@
-[Unit] # metadata about the service
+[Unit]
 Description="{{serviceName}}"
 After=network-online.target
 Wants=network-online.target
 
-[Service] # execution logic
+[Service]
 User={{userId}}
 Group={{groupId}}
 Restart=always
 RestartSec=2
-StartLimitIntervalSec=0  # service will restarted indefinitely
+StartLimitIntervalSec=0
 Type=simple
 ExecStart={{ exec_command }}
 
 [Install]
-WantedBy=multi-user.target  # if the service is enabled, it will start at server boot
+WantedBy=multi-user.target

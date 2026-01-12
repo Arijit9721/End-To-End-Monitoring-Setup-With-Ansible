@@ -19,7 +19,7 @@
 
 - name: Copying the binaries from tmp to bin
   copy:
-    src: "/tmp/prometheus-{{version}}-linux-amd64/prometheus"
+    src: "/tmp/prometheus-{{version}}.linux-amd64/prometheus"
     dest: "/usr/local/bin/prometheus"
     owner: "{{userId}}"
     group: "{{groupId}}"
@@ -28,7 +28,7 @@
 
 - name: Deleting the tmp folder
   file:
-    path: "/tmp/prometheus-{{version}}-linux-amd64"
+    path: "/tmp/prometheus-{{version}}.linux-amd64"
     state: absent
 
 - name: Creating the data directory to store prometheus data

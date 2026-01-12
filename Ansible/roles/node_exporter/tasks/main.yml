@@ -19,7 +19,7 @@
 
 - name: Copying the binaries from tmp to bin
   copy:
-    src: "/tmp/node_exporter-{{version}}-linux-amd64/node_exporter"
+    src: "/tmp/node_exporter-{{version}}.linux-amd64/node_exporter"
     dest: "/usr/local/bin/node_exporter"
     owner: "{{userId}}"
     group: "{{groupId}}"
@@ -28,7 +28,7 @@
 
 - name: Deleting the tmp folder
   file:
-    path: "/tmp/node_exporter-{{version}}-linux-amd64"
+    path: "/tmp/node_exporter-{{version}}.linux-amd64"
     state: absent
 
 - name: Copying systemd init file

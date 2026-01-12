@@ -6,7 +6,7 @@ filters:
 compose:
   ansible_host: public_ip_address
 keyed_groups:
-  - key: tag:Environment  # group to call all ec2's by environment tag
+  - key: tags['Environment']  # group to call all ec2's by environment tag
     prefix: env
-  - key: tag:Name         # group to call each individual ec2 by name tag
+  - key: tags['Name']         # group to call each individual ec2 by name tag
     prefix: name

@@ -13,13 +13,13 @@
 
 - name: Download alertmanager
   unarchive:
-    src: "https://github.com/prometheus/alertmanager/releases/download/v{{version}}/alertmanager-{{version}}-linux-amd64.tar.gz"
+    src: "https://github.com/prometheus/alertmanager/releases/download/v{{version}}/alertmanager-{{version}}.linux-amd64.tar.gz"
     dest: /tmp/
     remote_src: true # download on the target nodes and not the ansible hub
 
 - name: Copying the binaries from tmp to bin
   copy:
-    src: "/tmp/alertmanager-{{version}}-linux-amd64/alertmanager"
+    src: "/tmp/alertmanager-{{version}}.linux-amd64/alertmanager"
     dest: "/usr/local/bin/alertmanager"
     owner: "{{userId}}"
     group: "{{groupId}}"
@@ -28,7 +28,7 @@
 
 - name: Deleting the tmp folder
   file:
-    path: "/tmp/alertmanager-{{version}}-linux-amd64"
+    path: "/tmp/alertmanager-{{version}}.linux-amd64"
     state: absent
 
 - name: Creating the data directory to store alertmanager data
