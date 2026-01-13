@@ -8,7 +8,7 @@ A fully automated infrastructure and monitoring solution that provisions AWS EC2
 graph TB
     subgraph LOCAL["LOCAL MACHINE"]
         TF[Terraform]
-        AN[Ansible Controller]
+        AN[Aws CLI]
     end
 
     subgraph CLOUD["AWS CLOUD"]
@@ -33,10 +33,10 @@ graph TB
 
     TF -->|Provisions| CLOUD
     AN -->|SSH to| ANSIBLE
-    ANSIBLE -->|Configures| MONITOR
+    ANSIBLE -->|Deploys| MONITOR
     INFRA -.->|Secures| ANSIBLE
 
-    PROM -->|Scrapes| NODE
+    NODE -->|Metrics| PROM
     PROM -->|Alerts| ALERT
     ALERT -->|Notifies| SLACK
     GRAF -->|Queries| PROM
