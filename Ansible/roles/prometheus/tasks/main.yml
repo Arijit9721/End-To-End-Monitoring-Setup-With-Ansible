@@ -56,22 +56,25 @@
   template:
     src: "prometheus.conf.j2"
     dest: "/etc/prometheus/prometheus.conf"
-  notify: systemd_reload
 
 - name: Copying systemd init file
   template: # copy module can't handle the variables in the .j2 file so we use template module
     src: "prometheus.service.j2"
     dest: "/etc/systemd/system/{{serviceName}}.service"
-  notify: systemd_reload # calls the handler
 
 - name: Start prometheus service
   service:
     name: "{{serviceName}}"
     state: started
     enabled: yes
+    daemon_reload: yes
 
 - name: Check if prometheus is working
   uri:
     url: http://localhost:9090
     method: GET
     status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 15
+  delay: 10

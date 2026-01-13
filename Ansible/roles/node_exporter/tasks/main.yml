@@ -35,16 +35,20 @@
   template: # copy module can't handle the variables in the .j2 file so we use template module
     src: "exporter.service.j2"
     dest: "/etc/systemd/system/{{serviceName}}.service"
-  notify: systemd_reload # calls the handler
 
 - name: Start node_exporter service
   service:
     name: "{{serviceName}}"
     state: started
     enabled: yes
+    daemon_reload: yes
 
 - name: Check if node_exporter is working
   uri:
     url: http://localhost:9100/metrics
     method: GET
     status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 15
+  delay: 10

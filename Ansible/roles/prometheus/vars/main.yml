@@ -2,4 +2,4 @@ groupId: prometheus
 userId: prometheus
 version: 3.5.0
 serviceName: prometheus
-exec_command: /usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.conf --storage.tsdb.path=/data/prometheus --storage.tsdb.retention=2d
+exec_command: /usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.conf --storage.tsdb.path=/data/prometheus --storage.tsdb.retention.time=2d

@@ -34,13 +34,17 @@
 
 - name: Starting and enabling grafana service
   service:
-    name: grafana
+    name: grafana-server
     state: started
     enabled: yes
-  notify: restart_grafana # call the handler
+    daemon_reload: yes
 
 - name: Grafana Check
   uri:
     url: http://localhost:3000
     method: GET
     status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 15
+  delay: 10

@@ -30,11 +30,11 @@ resource "aws_security_group" "ec2_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Allow smtp on port 587
+  # Allow the necessary ports
   ingress {
-    description = "SMTP"
-    from_port   = 587
-    to_port     = 587
+    description = "Necessary ports"
+    from_port   = 3000
+    to_port     = 10000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

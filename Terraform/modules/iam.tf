@@ -19,12 +19,23 @@ resource "aws_iam_policy" "ansible_ec2_policy" {
     Statement = [
       {
         Action = [
+          "ec2:DescribeInstances",
+          "ec2:DescribeTags",
+          "ec2:DescribeVolumes",
+          "ec2:DescribeRegions",
+          "ec2:DescribeAvailabilityZones"
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+      {
+        Action = [
           "ec2:*",
           "iam:*",
           "cloudwatch:*"
         ]
         Effect   = "Allow"
-        Resource = "${aws_instance.ansible_ec2.arn}"
+        Resource = "*" 
       },
     ]
   })

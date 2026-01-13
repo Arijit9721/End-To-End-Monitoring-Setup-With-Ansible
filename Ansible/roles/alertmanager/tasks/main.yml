@@ -56,16 +56,20 @@
   template: # copy module can't handle the variables in the .j2 file so we use template module
     src: "init.service.j2"
     dest: "/etc/systemd/system/{{serviceName}}.service"
-  notify: systemd_reload # calls the handler
 
 - name: Start alertmanager service
   service:
     name: "{{serviceName}}"
     state: started
     enabled: yes
+    daemon_reload: yes
 
 - name: Check if alertmanager is working
   uri:
     url: http://localhost:9093
     method: GET
     status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 15
+  delay: 10
